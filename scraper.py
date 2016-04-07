@@ -10,7 +10,6 @@ from datetime import datetime
 from bs4 import BeautifulSoup
 
 
-
 #### FUNCTIONS 1.0
 
 def validateFilename(filename):
@@ -38,6 +37,7 @@ def validateFilename(filename):
 
 
 def validateURL(url):
+
     try:
         r = urllib2.urlopen(url)
         count = 1
@@ -103,10 +103,10 @@ links = block.findAll('a')
 for link in links:
     if 'downloads' in link['href']:
         url = link['href']
-        if 'http://' not in url:
-            url = 'http://www.warrington.gov.uk'+url
+        if 'https://' not in url:
+            url = 'https://www.warrington.gov.uk'+url
         if not 'id' in url:
-            url = 'http://www.warrington.gov.uk/download/downloads/id/6601/final_spend_data_apr_2014_-_po'
+            url = 'https://www.warrington.gov.uk/download/downloads/id/6601/final_spend_data_apr_2014_-_po'
         csvfile = link.text.split()
         if len(csvfile) == 4:
             csvYr =csvfile[-1]
@@ -139,4 +139,3 @@ if errors > 0:
 
 
 #### EOF
-
