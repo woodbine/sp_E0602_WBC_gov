@@ -86,7 +86,7 @@ def convert_mth_strings ( mth_string ):
 #### VARIABLES 1.0
 
 entity_id = "E0602_WBC_gov"
-url = "http://www.warrington.gov.uk/info/200387/open_data/1075/open_data-monthly_council_expenditure"
+url = "https://www.warrington.gov.uk/downloads/201292/council_expenditure"
 errors = 0
 data = []
 
@@ -98,22 +98,19 @@ soup = BeautifulSoup(html, "lxml")
 
 #### SCRAPE DATA
 
-block = soup.find('table', attrs = {'summary':'council expenditure'})
-links = block.findAll('a')
+
+links = soup.findAll('a')
 for link in links:
-    if 'downloads' in link['href']:
+    if 'downloads/file/' in link['href']:
         url = link['href']
-        if 'https://' not in url:
-            url = 'https://www.warrington.gov.uk'+url
-        if not 'id' in url:
-            url = 'https://www.warrington.gov.uk/download/downloads/id/6601/final_spend_data_apr_2014_-_po'
-        csvfile = link.text.split()
-        if len(csvfile) == 4:
-            csvYr =csvfile[-1]
+        url = url.replace('/downloads/file/','/download/downloads/id/')
+        csvfile = link.text.strip()
+        if ' - ' in csvfile:
+            csvYr =csvfile[-4:]
             csvMth = 'Q0'
-        if len(csvfile) == 2:
-            csvYr =csvfile[-1].strip()
-            csvMth = csvfile[0].strip()[:3]
+        else:
+            csvYr =csvfile.split('data ')[-1].strip()[-4:]
+            csvMth = csvfile.split('data ')[-1].strip()[:3]
         csvMth = convert_mth_strings(csvMth.upper())
         data.append([csvYr, csvMth, url])
 
